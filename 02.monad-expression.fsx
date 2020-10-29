@@ -5,6 +5,9 @@ open FSharpPlus
 // Jak pracować z bardziej skomplikowanymi przypadkami?
 // Co zrobić jak mamy monadę w monadzie?
 
+// Wygodnym rozwiązaniem jest użycie computation expression
+// To wygodna składnia która upraszcza operacje na monadach
+
 ////// Prosty przykład na listach i funkcji
 let l1 = [1;2;3]
 let l2 = [4;5;6]
@@ -17,15 +20,18 @@ let lConcat = l1 @ listFun l2
 // yield to znany koncept z C# (iterator block) i z pythona (generatory)
 let lConcat' = 
     [ yield! l1
-      yield! listFun l2 ] 
+      yield! listFun l2
+      yield 42 ] 
 
-// albo generycznego monad expression z F#+
+// albo generycznego monad expression z F#+ (działa też na seq i aray)
 // monad.plus oznacza computation expression który może mieć wiele return'ów
 // `Additive monad`
 let lConcat'' = 
     monad.plus {
         return! l1
-        return! listFun l2 }
+        return! listFun l2
+        return 42 }
+
 
 
 
@@ -76,6 +82,8 @@ let aResult''''' = lift2 (+) async1 async2
                    |> Async.RunSynchronously
 
 
+
+
 ////// Monad expression dla opcji. Tylko w F#+, nie ma w FSharp.Core.
 let opt1 = Some 1
 let opt2 = Some 2
@@ -97,6 +105,9 @@ let oResult'''' =
     match (opt1, opt2) with
     | (Some opt1, Some opt2) -> Some <| opt1 + opt2
     | (_,_)                  -> None
+
+
+
 
 ////// Trudniejsze operacje na opcjach
 let opt3 = Some 3
@@ -126,6 +137,9 @@ let harderOptResult'' =
                     | None ->   None
                     | Some e -> Some <| multiplyBy4 e
 
+
+
+
 ////// Prosty przykład użycia dla Result
 ////// Działa bardzo podobnie do Option 
 let res1 : Result<int,string> = Ok 1
@@ -146,6 +160,9 @@ let rResult''' =
     | (Ok res1, Ok res2) -> Ok <| res1 + res2
     | (Error e ,_)       -> Error e
     | (_, Error e)       -> Error e
+
+
+
 
 ////// Rezultat funkcji która ma efekty
 let eRes1 () = 

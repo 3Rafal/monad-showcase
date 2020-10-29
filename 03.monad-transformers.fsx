@@ -32,6 +32,9 @@ let vResult'' = OptionT.map2 (+) (OptionT v1) (OptionT v2)
                 |> OptionT.run
                 |> Async.RunSynchronously
 
+
+
+
 ////// Co jeśli typy się nie zgadzają?
 ////// Muszę je doprowadzić do takiego samego, czyli Async<Option<int>>
 let ao1 = async { return Some 1 }
@@ -103,6 +106,9 @@ let aer =
     } |> ResultT.run 
       |> Async.RunSynchronously
 
+
+
+
 ////// Trzy warstwy. Transformery można ze sobą komponeować
 type T1 = Async<Option<Result<int, string>>> 
 
@@ -121,8 +127,9 @@ let result =
     } |> runCombined
       |> Async.RunSynchronously
 
-////// A co jeśli chcę odpalić wiele operacji asynchronicznie i zobaczyć które się udały, a które nie?
 
+
+////// A co jeśli chcę odpalić wiele operacji asynchronicznie i zobaczyć które się udały, a które nie?
 let a = async { return Ok    <| 1 }
 let b = async { return Error <| "b error" }
 let c = async { return Ok    <| 42 }
